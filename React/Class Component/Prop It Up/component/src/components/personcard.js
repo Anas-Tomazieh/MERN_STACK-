@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 class Personcard extends Component {
+    
         render() {
             const { firstName, lastName, age, hairColor } = this.props;
             return (
