@@ -1,0 +1,900 @@
+> use my_firts_db
+switched to db my_firts_db
+> db.createCollection(student)
+uncaught exception: ReferenceError: student is not defined :
+@(shell):1:1
+> db.createCollection("student")
+{ "ok" : 1 }
+> db.student.insert({name:"Anas",homw_state:"Ramallah",luky_number:10,birthday:{month:11,day:14,year:97}})
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({name:"Baraa",homw_state:"Ramallah",luky_number:120,birthday:{month:7,day:26,year:99}})
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({name:"Mohammad",homw_state:"hebron",luky_number:50,birthday:{month:8,day:4,year:2004}})
+WriteResult({ "nInserted" : 1 })
+> db.student.find()
+{ "_id" : ObjectId("610118228489910f6af20870"), "name" : "Anas", "homw_state" : "Ramallah", "luky_number" : 10, "birthday" : { "month" : 11, "day" : 14, "year" : 97 } }
+{ "_id" : ObjectId("610118528489910f6af20871"), "name" : "Baraa", "homw_state" : "Ramallah", "luky_number" : 120, "birthday" : { "month" : 7, "day" : 26, "year" : 99 } }
+{ "_id" : ObjectId("610118a08489910f6af20872"), "name" : "Mohammad", "homw_state" : "hebron", "luky_number" : 50, "birthday" : { "month" : 8, "day" : 4, "year" : 2004 } }
+> db.student.find(homw_state:"Ramallah")
+uncaught exception: SyntaxError: missing ) after argument list :
+@(shell):1:26
+> db.student.find({homw_state:"Ramallah"})
+{ "_id" : ObjectId("610118228489910f6af20870"), "name" : "Anas", "homw_state" : "Ramallah", "luky_number" : 10, "birthday" : { "month" : 11, "day" : 14, "year" : 97 } }
+{ "_id" : ObjectId("610118528489910f6af20871"), "name" : "Baraa", "homw_state" : "Ramallah", "luky_number" : 120, "birthday" : { "month" : 7, "day" : 26, "year" : 99 } }
+> db.student.find({luky_number:>3})
+uncaught exception: SyntaxError: expected expression, got '>' :
+@(shell):1:29
+> db.student.find({luky_number:{$gt:3}})
+{ "_id" : ObjectId("610118228489910f6af20870"), "name" : "Anas", "homw_state" : "Ramallah", "luky_number" : 10, "birthday" : { "month" : 11, "day" : 14, "year" : 97 } }
+{ "_id" : ObjectId("610118528489910f6af20871"), "name" : "Baraa", "homw_state" : "Ramallah", "luky_number" : 120, "birthday" : { "month" : 7, "day" : 26, "year" : 99 } }
+{ "_id" : ObjectId("610118a08489910f6af20872"), "name" : "Mohammad", "homw_state" : "hebron", "luky_number" : 50, "birthday" : { "month" : 8, "day" : 4, "year" : 2004 } }
+> db.student.find({luky_number:{$lte:10}})
+{ "_id" : ObjectId("610118228489910f6af20870"), "name" : "Anas", "homw_state" : "Ramallah", "luky_number" : 10, "birthday" : { "month" : 11, "day" : 14, "year" : 97 } }
+> db.student.find({luky_number:{$range:[1,9,1]}})
+Error: error: {
+        "ok" : 0,
+        "errmsg" : "unknown operator: $range",
+        "code" : 2,
+        "codeName" : "BadValue"
+}
+> db.student.find({$and: [{luky_number:{$lte:9}}, {luky_number:{$gte:1}}]});
+> db.student.find({$and: [{luky_number:{$lte:50}}, {luky_number:{$gte:1}}]});
+{ "_id" : ObjectId("610118228489910f6af20870"), "name" : "Anas", "homw_state" : "Ramallah", "luky_number" : 10, "birthday" : { "month" : 11, "day" : 14, "year" : 97 } }
+{ "_id" : ObjectId("610118a08489910f6af20872"), "name" : "Mohammad", "homw_state" : "hebron", "luky_number" : 50, "birthday" : { "month" : 8, "day" : 4, "year" : 2004 } }
+> db.student.find({$and: [{luky_number:{$lte:50}}, {luky_number:{$gte:1}}]}).pretty();
+{
+        "_id" : ObjectId("610118228489910f6af20870"),
+        "name" : "Anas",
+        "homw_state" : "Ramallah",
+        "luky_number" : 10,
+        "birthday" : {
+                "month" : 11,
+                "day" : 14,
+                "year" : 97
+        }
+}
+{
+        "_id" : ObjectId("610118a08489910f6af20872"),
+        "name" : "Mohammad",
+        "homw_state" : "hebron",
+        "luky_number" : 50,
+        "birthday" : {
+                "month" : 8,
+                "day" : 4,
+                "year" : 2004
+        }
+}
+> db.student.update({interests:["Coding","brunch","Mongodb"]})
+uncaught exception: Error: need an update object or pipeline :
+DBCollection.prototype._parseUpdate@src/mongo/shell/collection.js:461:15
+DBCollection.prototype.update@src/mongo/shell/collection.js:510:18
+@(shell):1:1
+> db.student.updateMany({},{interests:["Coding","brunch","Mongodb"]})
+uncaught exception: Error: the update operation document must contain atomic operators :
+DBCollection.prototype.updateMany@src/mongo/shell/crud_api.js:655:19
+@(shell):1:1
+> db.student.updateMany({},{interests:["Coding","brunch","Mongodb"]});
+uncaught exception: Error: the update operation document must contain atomic operators :
+DBCollection.prototype.updateMany@src/mongo/shell/crud_api.js:655:19
+@(shell):1:1
+> db.student.updateMany({set},{interests:["Coding","brunch","Mongodb"]});
+uncaught exception: ReferenceError: set is not defined :
+@(shell):1:24
+> db.student.updateMany({},{set: {interests:["Coding","brunch","Mongodb"]}});
+uncaught exception: Error: the update operation document must contain atomic operators :
+DBCollection.prototype.updateMany@src/mongo/shell/crud_api.js:655:19
+@(shell):1:1
+> db.student.updateMany({},{$set: {interests:["Coding","brunch","Mongodb"]}});
+{ "acknowledged" : true, "matchedCount" : 3, "modifiedCount" : 3 }
+> db.student.find().pretty();
+{
+        "_id" : ObjectId("610118228489910f6af20870"),
+        "name" : "Anas",
+        "homw_state" : "Ramallah",
+        "luky_number" : 10,
+        "birthday" : {
+                "month" : 11,
+                "day" : 14,
+                "year" : 97
+        },
+        "interests" : [
+                "Coding",
+                "brunch",
+                "Mongodb"
+        ]
+}
+{
+        "_id" : ObjectId("610118528489910f6af20871"),
+        "name" : "Baraa",
+        "homw_state" : "Ramallah",
+        "luky_number" : 120,
+        "birthday" : {
+                "month" : 7,
+                "day" : 26,
+                "year" : 99
+        },
+        "interests" : [
+                "Coding",
+                "brunch",
+                "Mongodb"
+        ]
+}
+{
+        "_id" : ObjectId("610118a08489910f6af20872"),
+        "name" : "Mohammad",
+        "homw_state" : "hebron",
+        "luky_number" : 50,
+        "birthday" : {
+                "month" : 8,
+                "day" : 4,
+                "year" : 2004
+        },
+        "interests" : [
+                "Coding",
+                "brunch",
+                "Mongodb"
+        ]
+}
+> db.student.update({},{$set: {interests:["Coding","brunch"]}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.student.find().pretty();
+{
+        "_id" : ObjectId("610118228489910f6af20870"),
+        "name" : "Anas",
+        "homw_state" : "Ramallah",
+        "luky_number" : 10,
+        "birthday" : {
+                "month" : 11,
+                "day" : 14,
+                "year" : 97
+        },
+        "interests" : [
+                "Coding",
+                "brunch"
+        ]
+}
+{
+        "_id" : ObjectId("610118528489910f6af20871"),
+        "name" : "Baraa",
+        "homw_state" : "Ramallah",
+        "luky_number" : 120,
+        "birthday" : {
+                "month" : 7,
+                "day" : 26,
+                "year" : 99
+        },
+        "interests" : [
+                "Coding",
+                "brunch",
+                "Mongodb"
+        ]
+}
+{
+        "_id" : ObjectId("610118a08489910f6af20872"),
+        "name" : "Mohammad",
+        "homw_state" : "hebron",
+        "luky_number" : 50,
+        "birthday" : {
+                "month" : 8,
+                "day" : 4,
+                "year" : 2004
+        },
+        "interests" : [
+                "Coding",
+                "brunch",
+                "Mongodb"
+        ]
+}
+> db.student.update({},{$set: {taxes:["AnyThing"]}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.student.update({},{$set: {taxes:["AnyThing"]}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 0 })
+> db.student.find().pretty();
+{
+        "_id" : ObjectId("610118228489910f6af20870"),
+        "name" : "Anas",
+        "homw_state" : "Ramallah",
+        "luky_number" : 10,
+        "birthday" : {
+                "month" : 11,
+                "day" : 14,
+                "year" : 97
+        },
+        "interests" : [
+                "Coding",
+                "brunch"
+        ],
+        "taxes" : [
+                "AnyThing"
+        ]
+}
+{
+        "_id" : ObjectId("610118528489910f6af20871"),
+        "name" : "Baraa",
+        "homw_state" : "Ramallah",
+        "luky_number" : 120,
+        "birthday" : {
+                "month" : 7,
+                "day" : 26,
+                "year" : 99
+        },
+        "interests" : [
+                "Coding",
+                "brunch",
+                "Mongodb"
+        ]
+}
+{
+        "_id" : ObjectId("610118a08489910f6af20872"),
+        "name" : "Mohammad",
+        "homw_state" : "hebron",
+        "luky_number" : 50,
+        "birthday" : {
+                "month" : 8,
+                "day" : 4,
+                "year" : 2004
+        },
+        "interests" : [
+                "Coding",
+                "brunch",
+                "Mongodb"
+        ]
+}
+> db.student.remove({taxes:"AnyThing"})
+WriteResult({ "nRemoved" : 1 })
+> db.student.find().pretty();
+{
+        "_id" : ObjectId("610118528489910f6af20871"),
+        "name" : "Baraa",
+        "homw_state" : "Ramallah",
+        "luky_number" : 120,
+        "birthday" : {
+                "month" : 7,
+                "day" : 26,
+                "year" : 99
+        },
+        "interests" : [
+                "Coding",
+                "brunch",
+                "Mongodb"
+        ]
+}
+{
+        "_id" : ObjectId("610118a08489910f6af20872"),
+        "name" : "Mohammad",
+        "homw_state" : "hebron",
+        "luky_number" : 50,
+        "birthday" : {
+                "month" : 8,
+                "day" : 4,
+                "year" : 2004
+        },
+        "interests" : [
+                "Coding",
+                "brunch",
+                "Mongodb"
+        ]
+}
+> db.student.update({}, {$pop: {taxes: (1)}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 0 })
+> db.student.find().pretty();
+{
+        "_id" : ObjectId("610118528489910f6af20871"),
+        "name" : "Baraa",
+        "homw_state" : "Ramallah",
+        "luky_number" : 120,
+        "birthday" : {
+                "month" : 7,
+                "day" : 26,
+                "year" : 99
+        },
+        "interests" : [
+                "Coding",
+                "brunch",
+                "Mongodb"
+        ]
+}
+{
+        "_id" : ObjectId("610118a08489910f6af20872"),
+        "name" : "Mohammad",
+        "homw_state" : "hebron",
+        "luky_number" : 50,
+        "birthday" : {
+                "month" : 8,
+                "day" : 4,
+                "year" : 2004
+        },
+        "interests" : [
+                "Coding",
+                "brunch",
+                "Mongodb"
+        ]
+}
+> db.student.update({name:"Anas"}, {$pop: {taxes: (1)}})
+WriteResult({ "nMatched" : 0, "nUpserted" : 0, "nModified" : 0 })
+> db.student.find().pretty();
+{
+        "_id" : ObjectId("610118528489910f6af20871"),
+        "name" : "Baraa",
+        "homw_state" : "Ramallah",
+        "luky_number" : 120,
+        "birthday" : {
+                "month" : 7,
+                "day" : 26,
+                "year" : 99
+        },
+        "interests" : [
+                "Coding",
+                "brunch",
+                "Mongodb"
+        ]
+}
+{
+        "_id" : ObjectId("610118a08489910f6af20872"),
+        "name" : "Mohammad",
+        "homw_state" : "hebron",
+        "luky_number" : 50,
+        "birthday" : {
+                "month" : 8,
+                "day" : 4,
+                "year" : 2004
+        },
+        "interests" : [
+                "Coding",
+                "brunch",
+                "Mongodb"
+        ]
+}
+> db.ninjas.remove({belt: "yellow"})
+WriteResult({ "nRemoved" : 0 })
+> db.ninjas.remove({belt: "yellow"})
+WriteResult({ "nRemoved" : 0 })
+> db.ninjas.remove({belt: "yellow"})
+WriteResult({ "nRemoved" : 0 })
+> db.student.remove({homw_state:"Ramallah"})
+WriteResult({ "nRemoved" : 1 })
+> db.student.find().pretty();
+{
+        "_id" : ObjectId("610118a08489910f6af20872"),
+        "name" : "Mohammad",
+        "homw_state" : "hebron",
+        "luky_number" : 50,
+        "birthday" : {
+                "month" : 8,
+                "day" : 4,
+                "year" : 2004
+        },
+        "interests" : [
+                "Coding",
+                "brunch",
+                "Mongodb"
+        ]
+}
+> db.student.insert({name:"Baraa",homw_state:"Ramallah",luky_number:120,birthday:{month:7,day:26,year:99}})
+WriteResult({ "nInserted" : 1 })
+> db.student.remove({name:"Mohammad"})
+WriteResult({ "nRemoved" : 1 })
+> db.student.find().pretty();
+{
+        "_id" : ObjectId("610153d88489910f6af20873"),
+        "name" : "Baraa",
+        "homw_state" : "Ramallah",
+        "luky_number" : 120,
+        "birthday" : {
+                "month" : 7,
+                "day" : 26,
+                "year" : 99
+        }
+}
+> db.student.insert({name:"Baraa",homw_state:"Ramallah",luky_number:120,birthday:{month:7,day:26,year:99}})
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({name:"Anas",homw_state:"Ramallah",luky_number:10,birthday:{month:11,day:14,year:97}})
+WriteResult({ "nInserted" : 1 })
+> db.student.remove({luky_number:{$gt 5}})
+uncaught exception: SyntaxError: missing : after property id :
+@(shell):1:36
+> db.student.remove({luky_number:{$gt 5}},true)
+uncaught exception: SyntaxError: missing : after property id :
+@(shell):1:36
+> db.student.remove({luky_number:{$gt: 5}},true)
+WriteResult({ "nRemoved" : 1 })
+> db.student.find().pretty();
+{
+        "_id" : ObjectId("610154008489910f6af20874"),
+        "name" : "Baraa",
+        "homw_state" : "Ramallah",
+        "luky_number" : 120,
+        "birthday" : {
+                "month" : 7,
+                "day" : 26,
+                "year" : 99
+        }
+}
+{
+        "_id" : ObjectId("610154108489910f6af20875"),
+        "name" : "Anas",
+        "homw_state" : "Ramallah",
+        "luky_number" : 10,
+        "birthday" : {
+                "month" : 11,
+                "day" : 14,
+                "year" : 97
+        }
+}
+> db.student.remove({luky_number:{$gt:5}}
+... ^C
+
+> db.student.remove({luky_number:{$gt: 5}})
+WriteResult({ "nRemoved" : 2 })
+> db.student.find().pretty();
+> db.student.insert({name:"Anas",homw_state:"Ramallah",luky_number:10,birthday:{month:11,day:14,year:97}})
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({name:"Baraa",homw_state:"Ramallah",luky_number:120,birthday:{month:7,day:26,year:99}})
+WriteResult({ "nInserted" : 1 })
+> db.student.updateMany({},$set:{'number_of_belts':0})
+uncaught exception: SyntaxError: missing ) after argument list :
+@(shell):1:29
+> db.student.updateMany({},$set:{"number_of_belts":0})
+uncaught exception: SyntaxError: missing ) after argument list :
+@(shell):1:29
+> db.student.updateMany({},{$set:{'number_of_belts':0}})
+{ "acknowledged" : true, "matchedCount" : 2, "modifiedCount" : 2 }
+> db.student.find().pretty();
+{
+        "_id" : ObjectId("610154f18489910f6af20876"),
+        "name" : "Anas",
+        "homw_state" : "Ramallah",
+        "luky_number" : 10,
+        "birthday" : {
+                "month" : 11,
+                "day" : 14,
+                "year" : 97
+        },
+        "number_of_belts" : 0
+}
+{
+        "_id" : ObjectId("610154f58489910f6af20877"),
+        "name" : "Baraa",
+        "homw_state" : "Ramallah",
+        "luky_number" : 120,
+        "birthday" : {
+                "month" : 7,
+                "day" : 26,
+                "year" : 99
+        },
+        "number_of_belts" : 0
+}
+> db.student.updateMany({},{$inc:{"number_of_belts":1}})
+{ "acknowledged" : true, "matchedCount" : 2, "modifiedCount" : 2 }
+> db.student.find().pretty();
+{
+        "_id" : ObjectId("610154f18489910f6af20876"),
+        "name" : "Anas",
+        "homw_state" : "Ramallah",
+        "luky_number" : 10,
+        "birthday" : {
+                "month" : 11,
+                "day" : 14,
+                "year" : 97
+        },
+        "number_of_belts" : 1
+}
+{
+        "_id" : ObjectId("610154f58489910f6af20877"),
+        "name" : "Baraa",
+        "homw_state" : "Ramallah",
+        "luky_number" : 120,
+        "birthday" : {
+                "month" : 7,
+                "day" : 26,
+                "year" : 99
+        },
+        "number_of_belts" : 1
+}
+> db.student.updateMany({},{$rename:{"number_of_belts":"belts_ernads"}})
+{ "acknowledged" : true, "matchedCount" : 2, "modifiedCount" : 2 }
+> db.student.find().pretty();
+{
+        "_id" : ObjectId("610154f18489910f6af20876"),
+        "name" : "Anas",
+        "homw_state" : "Ramallah",
+        "luky_number" : 10,
+        "birthday" : {
+                "month" : 11,
+                "day" : 14,
+                "year" : 97
+        },
+        "belts_ernads" : 1
+}
+{
+        "_id" : ObjectId("610154f58489910f6af20877"),
+        "name" : "Baraa",
+        "homw_state" : "Ramallah",
+        "luky_number" : 120,
+        "birthday" : {
+                "month" : 7,
+                "day" : 26,
+                "year" : 99
+        },
+        "belts_ernads" : 1
+}
+> db.student.update({},$unset:{"luky_number"})
+uncaught exception: SyntaxError: missing ) after argument list :
+@(shell):1:27
+> db.student.update({},{$unset:{"luky_number"}})
+uncaught exception: SyntaxError: missing : after property id :
+@(shell):1:43
+> db.student.update({},{$unset:{"luky_number:1db.ninjas.remove({belt: "yellow"})"}})
+uncaught exception: SyntaxError: missing : after property id :
+@(shell):1:69
+>
+> db.student.update({},$unset:{"luky_number:1"})
+uncaught exception: SyntaxError: missing ) after argument list :
+@(shell):1:27
+> db.student.update({},$unset:{"luky_number":120})
+uncaught exception: SyntaxError: missing ) after argument list :
+@(shell):1:27
+> db.student.update({},$unset:{luky_number:120})
+uncaught exception: SyntaxError: missing ) after argument list :
+@(shell):1:27
+> db.student.updateMany({},$unset:{luky_number:120})
+uncaught exception: SyntaxError: missing ) after argument list :
+@(shell):1:31
+> db.student.updateMany({},$unset:{"luky_number":120})
+uncaught exception: SyntaxError: missing ) after argument list :
+@(shell):1:31
+> db.student.remove({"luky_number"})
+uncaught exception: SyntaxError: missing : after property id :
+@(shell):1:32
+> db.student.remove({"luky_number":120})
+WriteResult({ "nRemoved" : 1 })
+> db.student.remove({"luky_number":12})
+WriteResult({ "nRemoved" : 0 })
+> db.student.find().pretty();
+{
+        "_id" : ObjectId("610154f18489910f6af20876"),
+        "name" : "Anas",
+        "homw_state" : "Ramallah",
+        "luky_number" : 10,
+        "birthday" : {
+                "month" : 11,
+                "day" : 14,
+                "year" : 97
+        },
+        "belts_ernads" : 1
+}
+> db.student.remove({"luky_number":10})
+WriteResult({ "nRemoved" : 1 })
+> db.student.find().pretty();
+> db.student.insert({name:"Anas",homw_state:"Ramallah",luky_number:10,birthday:{month:11,day:14,year:97}})
+WriteResult({ "nInserted" : 1 })
+> db.student.updateMany({},{$currentdate:{"Date":{$type:"date"}}})
+WriteError({
+        "index" : 0,
+        "code" : 9,
+        "errmsg" : "Unknown modifier: $currentdate. Expected a valid update modifier or pipeline-style update specified as an array",
+        "op" : {
+                "q" : {
+
+                },
+                "u" : {
+                        "$currentdate" : {
+                                "Date" : {
+                                        "$type" : "date"
+                                }
+                        }
+                },
+                "multi" : true,
+                "upsert" : false
+        }
+}) :
+WriteError({
+        "index" : 0,
+        "code" : 9,
+        "errmsg" : "Unknown modifier: $currentdate. Expected a valid update modifier or pipeline-style update specified as an array",
+        "op" : {
+                "q" : {
+
+                },
+                "u" : {
+                        "$currentdate" : {
+                                "Date" : {
+                                        "$type" : "date"
+                                }
+                        }
+                },
+                "multi" : true,
+                "upsert" : false
+        }
+})
+WriteError@src/mongo/shell/bulk_api.js:465:48
+mergeBatchResults@src/mongo/shell/bulk_api.js:871:49
+executeBatch@src/mongo/shell/bulk_api.js:940:13
+Bulk/this.execute@src/mongo/shell/bulk_api.js:1182:21
+DBCollection.prototype.updateMany@src/mongo/shell/crud_api.js:690:17
+@(shell):1:1
+> db.student.find().pretty();
+{
+        "_id" : ObjectId("610158228489910f6af20878"),
+        "name" : "Anas",
+        "homw_state" : "Ramallah",
+        "luky_number" : 10,
+        "birthday" : {
+                "month" : 11,
+                "day" : 14,
+                "year" : 97
+        }
+}
+> db.student.updateMany({},{$set:{"Date":{$type:"Date"}}})
+{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+> db.student.find().pretty();
+{
+        "_id" : ObjectId("610158228489910f6af20878"),
+        "name" : "Anas",
+        "homw_state" : "Ramallah",
+        "luky_number" : 10,
+        "birthday" : {
+                "month" : 11,
+                "day" : 14,
+                "year" : 97
+        },
+        "Date" : {
+                "$type" : "Date"
+        }
+}
+> db.student.updateMany({},{$currentdate:{"Date":{$type:"date"}}})
+uncaught exception: WriteError({
+        "index" : 0,
+        "code" : 9,
+        "errmsg" : "Unknown modifier: $currentdate. Expected a valid update modifier or pipeline-style update specified as an array",
+        "op" : {
+                "q" : {
+
+                },
+                "u" : {
+                        "$currentdate" : {
+                                "Date" : {
+                                        "$type" : "date"
+                                }
+                        }
+                },
+                "multi" : true,
+                "upsert" : false
+        }
+}) :
+WriteError({
+        "index" : 0,
+        "code" : 9,
+        "errmsg" : "Unknown modifier: $currentdate. Expected a valid update modifier or pipeline-style update specified as an array",
+        "op" : {
+                "q" : {
+
+                },
+                "u" : {
+                        "$currentdate" : {
+                                "Date" : {
+                                        "$type" : "date"
+                                }
+                        }
+                },
+                "multi" : true,
+                "upsert" : false
+        }
+})
+WriteError@src/mongo/shell/bulk_api.js:465:48
+mergeBatchResults@src/mongo/shell/bulk_api.js:871:49
+executeBatch@src/mongo/shell/bulk_api.js:940:13
+Bulk/this.execute@src/mongo/shell/bulk_api.js:1182:21
+DBCollection.prototype.updateMany@src/mongo/shell/crud_api.js:690:17
+@(shell):1:1
+> db.student.updateMany({},{$Date:{"Date":{$type:"date"}}})
+WriteError({
+        "index" : 0,
+        "code" : 9,
+        "errmsg" : "Unknown modifier: $Date. Expected a valid update modifier or pipeline-style update specified as an array",
+        "op" : {
+                "q" : {
+
+                },
+                "u" : {
+                        "$Date" : {
+                                "Date" : {
+                                        "$type" : "date"
+                                }
+                        }
+                },
+                "multi" : true,
+                "upsert" : false
+        }
+}) :
+WriteError({
+        "index" : 0,
+        "code" : 9,
+        "errmsg" : "Unknown modifier: $Date. Expected a valid update modifier or pipeline-style update specified as an array",
+        "op" : {
+                "q" : {
+
+                },
+                "u" : {
+                        "$Date" : {
+                                "Date" : {
+                                        "$type" : "date"
+                                }
+                        }
+                },
+                "multi" : true,
+                "upsert" : false
+        }
+})
+WriteError@src/mongo/shell/bulk_api.js:465:48
+mergeBatchResults@src/mongo/shell/bulk_api.js:871:49
+executeBatch@src/mongo/shell/bulk_api.js:940:13
+Bulk/this.execute@src/mongo/shell/bulk_api.js:1182:21
+DBCollection.prototype.updateMany@src/mongo/shell/crud_api.js:690:17
+@(shell):1:1
+> db.student.updateMany({},{$date:{"Date":{$type:"date"}}})
+WriteError({
+        "index" : 0,
+        "code" : 9,
+        "errmsg" : "Unknown modifier: $date. Expected a valid update modifier or pipeline-style update specified as an array",
+        "op" : {
+                "q" : {
+
+                },
+                "u" : {
+                        "$date" : {
+                                "Date" : {
+                                        "$type" : "date"
+                                }
+                        }
+                },
+                "multi" : true,
+                "upsert" : false
+        }
+}) :
+WriteError({
+        "index" : 0,
+        "code" : 9,
+        "errmsg" : "Unknown modifier: $date. Expected a valid update modifier or pipeline-style update specified as an array",
+        "op" : {
+                "q" : {
+
+                },
+                "u" : {
+                        "$date" : {
+                                "Date" : {
+                                        "$type" : "date"
+                                }
+                        }
+                },
+                "multi" : true,
+                "upsert" : false
+        }
+})
+WriteError@src/mongo/shell/bulk_api.js:465:48
+mergeBatchResults@src/mongo/shell/bulk_api.js:871:49
+executeBatch@src/mongo/shell/bulk_api.js:940:13
+Bulk/this.execute@src/mongo/shell/bulk_api.js:1182:21
+DBCollection.prototype.updateMany@src/mongo/shell/crud_api.js:690:17
+@(shell):1:1
+> db.student.updateMany({},{$date:{"Date":{$type:"date"}}})
+WriteError({
+        "index" : 0,
+        "code" : 9,
+        "errmsg" : "Unknown modifier: $date. Expected a valid update modifier or pipeline-style update specified as an array",
+        "op" : {
+                "q" : {
+
+                },
+                "u" : {
+                        "$date" : {
+                                "Date" : {
+                                        "$type" : "date"
+                                }
+                        }
+                },
+                "multi" : true,
+                "upsert" : false
+        }
+}) :
+WriteError({
+        "index" : 0,
+        "code" : 9,
+        "errmsg" : "Unknown modifier: $date. Expected a valid update modifier or pipeline-style update specified as an array",
+        "op" : {
+                "q" : {
+
+                },
+                "u" : {
+                        "$date" : {
+                                "Date" : {
+                                        "$type" : "date"
+                                }
+                        }
+                },
+                "multi" : true,
+                "upsert" : false
+        }
+})
+WriteError@src/mongo/shell/bulk_api.js:465:48
+mergeBatchResults@src/mongo/shell/bulk_api.js:871:49
+executeBatch@src/mongo/shell/bulk_api.js:940:13
+Bulk/this.execute@src/mongo/shell/bulk_api.js:1182:21
+DBCollection.prototype.updateMany@src/mongo/shell/crud_api.js:690:17
+@(shell):1:1
+> db.student.updateMany({},{$date:{"Date":{$type:"date"}}})
+WriteError({
+        "index" : 0,
+        "code" : 9,
+        "errmsg" : "Unknown modifier: $date. Expected a valid update modifier or pipeline-style update specified as an array",
+        "op" : {
+                "q" : {
+
+                },
+                "u" : {
+                        "$date" : {
+                                "Date" : {
+                                        "$type" : "date"
+                                }
+                        }
+                },
+                "multi" : true,
+                "upsert" : false
+        }
+}) :
+WriteError({
+        "index" : 0,
+        "code" : 9,
+        "errmsg" : "Unknown modifier: $date. Expected a valid update modifier or pipeline-style update specified as an array",
+        "op" : {
+                "q" : {
+
+                },
+                "u" : {
+                        "$date" : {
+                                "Date" : {
+                                        "$type" : "date"
+                                }
+                        }
+                },
+                "multi" : true,
+                "upsert" : false
+        }
+})
+WriteError@src/mongo/shell/bulk_api.js:465:48
+mergeBatchResults@src/mongo/shell/bulk_api.js:871:49
+executeBatch@src/mongo/shell/bulk_api.js:940:13
+Bulk/this.execute@src/mongo/shell/bulk_api.js:1182:21
+DBCollection.prototype.updateMany@src/mongo/shell/crud_api.js:690:17
+@(shell):1:1
+> db.student.find().pretty();
+{
+        "_id" : ObjectId("610158228489910f6af20878"),
+        "name" : "Anas",
+        "homw_state" : "Ramallah",
+        "luky_number" : 10,
+        "birthday" : {
+                "month" : 11,
+                "day" : 14,
+                "year" : 97
+        },
+        "Date" : {
+                "$type" : "Date"
+        }
+}
+> db.student.updateMany({},{$currentDate:{"Date":{$type:"date"}}})
+{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+> db.student.find().pretty();
+{
+        "_id" : ObjectId("610158228489910f6af20878"),
+        "name" : "Anas",
+        "homw_state" : "Ramallah",
+        "luky_number" : 10,
+        "birthday" : {
+                "month" : 11,
+                "day" : 14,
+                "year" : 97
+        },
+        "Date" : ISODate("2021-07-28T13:19:28.508Z")
+}
+>
